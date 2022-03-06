@@ -63,7 +63,7 @@ module.exports = {
             const request = new LoginUserDto(req)
 
             const connection = await Database.getConnection(res)
-            const result = await UserService.loginUserConnection(connection, request)
+            const result = await UserService.loginUserConnection(connection, request) //dao의 return userInfrom을 result 결과로 담은거임 !!!
 
             //res.output = await UserService.loginUserConnection(connection, request)
             // res.output = { result : true}

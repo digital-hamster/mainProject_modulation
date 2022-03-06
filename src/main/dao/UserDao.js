@@ -68,7 +68,7 @@ module.exports = {
                 password
             FROM user
             WHERE email = ?;`
-        const [rows] = await connection.execute(sql, [CryptoUtil.encrypt(email)]) ///////
+        const [rows] = await connection.execute(sql, [CryptoUtil.encrypt(email)])
 
         const userInform = rows[0]
 
