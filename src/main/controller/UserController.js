@@ -47,10 +47,11 @@ module.exports = {
             const { email } = request
 
             const connection = await Database.getConnection(res)
-            res.output = await UserService.createUserConnection(connection, request), UserService.createUserConnection(connection)
-
+            await UserService.createUserConnection(connection, request)
+            await UserService.createAuthCode(connection)
             //send authCode email
             await Mailgun.sendAuthCode(email, authCode)
+            // res.output =
             next()
         },
     },
