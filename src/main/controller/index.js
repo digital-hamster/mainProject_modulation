@@ -1,9 +1,12 @@
 const AsyncWrapper = require("../config/AsyncWrapper")
 const HttpMethod = require("../types/HttpMethod")
-const SampleController = require("./SampleController")
+// const SampleController = require("./SampleController")
+const UserController = require("./UserController")
 
 const registerAll = (app) => {
-    excute(app, SampleController)
+    // excute(app, SampleController)
+    excute(app, UserController)
+
 }
 
 function excute(app, controller) {
