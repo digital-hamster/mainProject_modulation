@@ -46,12 +46,13 @@ module.exports = {
             const request = new CreateUserDto(req)
             const { email } = request
 
-            const connection = await Database.getConnection(res)
-            await UserService.createUserConnection(connection, request)
-            await UserService.createAuthCode(connection)
+            const connection = await Database.getConnection(res) //Bind parameters must be array if namedPlaceholders parameter is not enabled
+            const authCode = await UserService.createUserConnection(connection, request)
+            // const authCode = await UserService.createUserConnection(connection)
+            
             //send authCode email
             await Mailgun.sendAuthCode(email, authCode)
-            // res.output =
+            res.output = { result : true}
             next()
         },
     },

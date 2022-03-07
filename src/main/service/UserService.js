@@ -34,12 +34,12 @@ module.exports = {
             throw Error("사용자 정보가 없습니다")
         }
 
-        const authResult = await UserDao.createAuthCode(connection, authCode)
+        const authResult = await UserDao.createAuthCode(connection, authCode, email)
         if (authResult.affectedRows == 0) {
             throw Error("사용자 인증코드 생성 실패")
         }
 
-        return userResult
+        return authCode
     },
 
     // loginUser

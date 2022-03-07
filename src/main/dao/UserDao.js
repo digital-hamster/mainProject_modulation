@@ -45,19 +45,21 @@ module.exports = {
     if (rows.affectedRows == 0) {
         throw Error("사용자 정보 입력 실패")
         }
+    return rows
 },
     //auth-code
-    createAuthCode : async (connection, authCode) => {
+    createAuthCode : async (connection, authCode, email) => {
         const sql = `
          INSERT INTO
                 user_auth (auth_code, user_email)
         VALUES (?, ?);
         `
-    const [rows] = await connection.execute(sql, authCode)
+    const [rows] = await connection.execute(sql, [authCode, CryptoUtil.encrypt(email)])
 
     if (rows.affectedRows == 0) {
         throw Error("사용자 인증코드 생성 실패")
         }
+    return rows
     },
 
     //login
@@ -80,5 +82,4 @@ module.exports = {
         }
         return userInform
     },
-
 }
