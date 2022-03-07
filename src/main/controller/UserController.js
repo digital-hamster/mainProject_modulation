@@ -9,12 +9,13 @@ const { LoginUserDto } = require("../dto/user/LoginUserDto")
 const UserService = require("../service/UserService")
 const HttpMethod = require("../types/HttpMethod")
 const ChangeUserAuthCodeDto = require("../dto/user/ChangeUserAuthCodeDto")
+const ResetUserPassword = require("../dto/user/ResetUserPassword")
 
 
-// 회원가입
-// 정식회원 변경
+// 회원가입 >> ㅇㅇ
+// 정식회원 변경 >> ㅇㅇ
 // 로그인 >> ㅇㅇ
-// 비밀번호 초기화
+// 비밀번호 초기화 >> ㅇㅇ
 // 비밀번호 변경
 // 회원탈퇴
 module.exports = {
@@ -94,6 +95,25 @@ module.exports = {
             }
 
             res.output = { result : { Token: Auth.signToken(result.id, result.permission) }, ...{formalMember: formalMember, admin: admin} }
+            next()
+        },
+    },
+
+    //비밀번호 초기화
+    createUser: {
+        method: HttpMethod.POST,
+        path: "/reset-password",
+        handler: async (req, res, next) => {
+            const request = new ResetUserPassword(req)
+            const { email } = request
+            //메일건으로 보내지기 이전에 존재하는 사용자인지는 미들웨어 (토큰)에서 판명남 코드 늘리기 ㄴㄴ
+
+            const changedPassword = await Mailgun.resetPassword(email)
+
+            const connection = await Database.getConnection(res)
+            await UserService.resetUserPassword(connection, email, changedPassword)
+
+            res.output = { result : true }
             next()
         },
     },

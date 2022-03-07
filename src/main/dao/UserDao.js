@@ -126,5 +126,18 @@ module.exports = {
         }
         return userInform
     },
-    
+    //비밀번호 초기화
+    resetPasswordByEmail : async (connection, email, changedPassword) => {
+        const sql =
+        `UPDATE user
+            SET password = ?
+          WHERE email = ?;`
+        const [rows] = await connection.execute(sql, [changedPassword, CryptoUtil.encrypt(email)])
+
+        if (rows.changedRows == 0) {
+            throw Error("변경 실패했습니다")
+        }
+
+        return rows
+    },
 }

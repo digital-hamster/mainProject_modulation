@@ -68,4 +68,14 @@ module.exports = {
 
         return userResult
     },
+
+    //비밀번호 초기화
+    resetUserPassword: async (connection, email, changedPassword) => {
+        const userResult = await UserDao.resetPasswordByEmail(connection, email, changedPassword)
+        if (!userResult || userResult.length < 1) {
+            throw Error("사용자 정보가 없습니다")
+        }
+
+        return { result : true }
+    },
 }
