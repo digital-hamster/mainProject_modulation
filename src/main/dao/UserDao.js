@@ -62,6 +62,50 @@ module.exports = {
     return rows
     },
 
+    //정식회원 변경
+    //정식회원 변경 - select email
+    //change authcode
+    selectEmailByAuthCode : async (connection, authcode) => {
+        const sql = `
+         SELECT user_email
+           FROM user_auth
+          WHERE auth_code = ?;`
+    const [rows] = await connection.execute(sql, [authcode])
+
+    if (rows.affectedRows == 0) {
+        throw Error("존재하지 않는 사용자입니다")
+        }
+    return rows[0].user_email
+    },
+
+    //정식회원 변경 - check permission
+    selectPermissionByEmail : async (connection, userEmail) => {
+        const sql =
+        `SELECT permission
+           FROM user
+          WHERE email = ?;`
+    const [rows] = await connection.execute(sql, [userEmail])
+
+    if (rows[0].permission === 1) {
+        throw Error("이미 정식회원인 사용자입니다")
+    }
+    return rows
+    },
+
+    //정식회원 변경 - update authcode
+    updateAuthcodeByEmail : async (connection, userEmail) => {
+        const sql =
+        `UPDATE user
+            SET permission = 1
+          WHERE email = ?;`
+    const [rows] = await connection.execute(sql, [userEmail])
+
+    if (rows.affectedRows == 0) {
+        throw Error("사용자 정보 변경에 실패했습니다")
+        }
+    return rows
+    },
+
     //login
     findUserByEmail : async (connection, email, password) => {
         const sql = `
@@ -82,4 +126,5 @@ module.exports = {
         }
         return userInform
     },
+    
 }

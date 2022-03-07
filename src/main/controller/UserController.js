@@ -8,6 +8,7 @@ const { CreateUserDto } = require("../dto/user/CreateUserDto")
 const { LoginUserDto } = require("../dto/user/LoginUserDto")
 const UserService = require("../service/UserService")
 const HttpMethod = require("../types/HttpMethod")
+const ChangeUserAuthCodeDto = require("../dto/user/ChangeUserAuthCodeDto")
 
 
 // 회원가입
@@ -38,7 +39,7 @@ module.exports = {
     //         next()
     //     },
 
-    // 회원가입
+    //회원가입
     createUser: {
         method: HttpMethod.POST,
         path: "/users",
@@ -48,15 +49,28 @@ module.exports = {
 
             const connection = await Database.getConnection(res) //Bind parameters must be array if namedPlaceholders parameter is not enabled
             const authCode = await UserService.createUserConnection(connection, request)
-            // const authCode = await UserService.createUserConnection(connection)
-            
+
             //send authCode email
             await Mailgun.sendAuthCode(email, authCode)
-            res.output = { result : true}
+            res.output = { result : true }
             next()
         },
     },
 
+    //정식회원 변경
+    changeAuthByUser: {
+        method: HttpMethod.POST,
+        path: "/auths/:authcode",
+        handler: async (req, res, next) => {
+            const request = new ChangeUserAuthCodeDto(req)
+
+            const connection = await Database.getConnection(res)
+            await UserService.changeAuthConnection(connection, request)
+
+            res.output = { result : true }
+            next()
+        },
+    },
     //로그인
     loginUser: {
         method: HttpMethod.POST,

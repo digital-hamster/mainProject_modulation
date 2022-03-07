@@ -42,6 +42,20 @@ module.exports = {
         return authCode
     },
 
+    //changeAuthcode
+    changeAuthConnection: async (connection, request) => {
+        const { authcode } = request
+        const userEmail = await UserDao.selectEmailByAuthCode(connection, authcode)
+        await UserDao.selectPermissionByEmail(connection, userEmail) //check permission > 변경하려는 사용자가 정식회원인지
+        const result = await UserDao.updateAuthcodeByEmail(connection, userEmail)
+
+        if (!result || result.length < 1) {
+            throw Error("정식회원 변경에 실패했습니다")
+        }
+
+        return result
+    },
+
     // loginUser
     loginUserConnection: async (connection, request) => {
         //authCode발급
