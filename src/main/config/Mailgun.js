@@ -22,7 +22,7 @@ const Mailgun = {
             tempPassword: tempPassword,
         }
 
-        return result
+        return result.tempPassword
     },
 
     sendAuthCode: async (email, authCode) => {

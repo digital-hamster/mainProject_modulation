@@ -132,7 +132,7 @@ module.exports = {
         `UPDATE user
             SET password = ?
           WHERE email = ?;`
-        const [rows] = await connection.execute(sql, [changedPassword, CryptoUtil.encrypt(email)])
+        const [rows] = await connection.execute(sql, [CryptoUtil.encryptByBcrypt(changedPassword), CryptoUtil.encrypt(email)])
 
         if (rows.changedRows == 0) {
             throw Error("변경 실패했습니다")
