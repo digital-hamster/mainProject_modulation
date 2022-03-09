@@ -1,12 +1,12 @@
 
 module.exports = {
-    createDocumentByRequest : async (connection, title, imgUrl, category, userId, content, mapLink) => {
+    createDocumentByRequest : async (connection, title, imgUrl, category, userId, content, mapLink, searchWord) => {
         const sql =
             `INSERT INTO
-           document (title, img_link, user_id, category, content, map_link)
-            VALUES (?, ?, ?, ?, ?, ?);`
+           document (title, img_link, user_id, category, content, map_link, search_word)
+            VALUES (?, ?, ?, ?, ?, ?, ?);`
 
-    const [rows] = await connection.execute(sql,[title, imgUrl, userId, category, content, mapLink])
+    const [rows] = await connection.execute(sql,[title, imgUrl, userId, category, content, mapLink, searchWord])
 
     if (rows.changedRows == 0) {
         throw Error("업로드를 실패했습니다")
@@ -15,7 +15,7 @@ module.exports = {
     return rows
     },
     selectDocumentByCategory : async (connection, category, limit, offset) => {
-        const sql = `SELECT id, title, img_link, content, map_link
+        const sql = `SELECT id, title, img_link, content, map_link, search_word
         FROM document
        WHERE category = ?
        ORDER BY id DESC

@@ -1,15 +1,16 @@
 const DocumentDao = require("../dao/DocumentDao")
+const AwsConfig = require("../config/AwsConfig")
 module.exports = {
     //게시글 업로드
     createDocument: async (connection, request) => {
-        const { title, category, userId, buffer, mimeType, originalname, content, mapLink } = request
+        const { title, category, userId, buffer, mimeType,  content, mapLink, searchWord } = request //originalname,
 
-        const extension = originalname.split(".")[1]
-        const imgUrl = await aws.S3.upload(buffer, mimeType, extension)
+        //const extension = originalname.split(".")[1]
+        const imgUrl = await AwsConfig.S3.upload(buffer, mimeType)//, extension
         if(!imgUrl || imgUrl.length===0){
             throw Error("이미지 업로드 과정에서 오류가 발생했습니다")
         }
-        await DocumentDao.createDocumentByRequest(connection, title, imgUrl, category, userId, content, mapLink)
+        await DocumentDao.createDocumentByRequest(connection, title, imgUrl, category, userId, content, mapLink, searchWord)
 
 
         return { result: true }

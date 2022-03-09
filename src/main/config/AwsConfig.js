@@ -7,7 +7,7 @@ module.exports = {
     S3: {
         upload: async (file, mimetype) => {
             const param = {
-                Bucket: "ws-image-upload-test",
+                Bucket: "younah-test-bucket",
                 Key: "image/" + uuidv4(),
                 ACL: "public-read",
                 Body: file,
