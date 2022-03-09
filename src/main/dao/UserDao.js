@@ -34,12 +34,12 @@ module.exports = {
 
     //회원가입 - authcode 삽입 //아니 이거 발급은 어디서 해주는거야 ??? ㅇ너ㅡ워ㅏㅂㅁ누어ㅏㅁ누ㅏ어ㅜㄴ머ㅏ류ㅜㅁ나ㅓ류 ㅂ다ㅓ륩댜ㅏㅓ류ㅓㅏㄷㅂ쥬ㅜㅅ하
     //서비스에서 발급해주고 그걸 db로 넘겨야하니까 이게 ㅣ맞는거 아녀 />??
-    createUser : async (connection, email, password, nickname) => {
+    createUser : async (connection, email, nickname, password) => {
         const sql = `
         INSERT INTO
-               user (email ,password, nickname)
+               user (email, nickname ,password)
         VALUES (?, ?, ?);`
-    const [rows] = await connection.execute(sql, [CryptoUtil.encrypt(email), CryptoUtil.encryptByBcrypt(password), nickname])
+    const [rows] = await connection.execute(sql, [CryptoUtil.encrypt(email), nickname, CryptoUtil.encryptByBcrypt(password)])
     //[CryptoUtil.encrypt(email), CryptoUtil.encryptByBcrypt(password), nickname]
 
     if (rows.affectedRows == 0) {
@@ -160,14 +160,52 @@ module.exports = {
         `UPDATE user
             SET password = ?
           WHERE id = ?;`
-        const [rows] = await connection.execute(sql, [CryptoUtil.encryptByBcrypt(changePw), userId])
+          const [rows] = await connection.execute(sql, [CryptoUtil.encryptByBcrypt(changePw), userId])
 
-        const userInform = rows[0]
+        const userInform = rows
 
         if (!userInform || rows.length === 0) {
             throw Error("존재하지 않는 사용자입니다.")
         }
 
-        return rows[0]
+        return rows
     },
+//회원탈퇴
+    selectEmailByUserId: async (connection, userId) => {
+        const sql =
+        `SELECT user_email
+           FROM user_auth
+          WHERE user_id = ?;`
+const [rows] = await connection.execute(sql, [userId])
+
+    if (rows.affectedRows == 0) {
+        throw Error("존재하지 않는 사용자입니다")
+    }
+return rows[0]
+},
+    deleteAuthCodeByEmail : async (connection, userEmail) => {
+        const sql =
+           `DELETE a FROM user_auth AS a
+        INNER JOIN user AS u
+                ON a.user_email = u.email
+             WHERE a.user_email = ?`
+    const [rows] = await connection.execute(sql, [userEmail])
+
+    return rows
+},
+    //유저 삭제 전에, authCode 삭제, document삭제, 유저 id삭제
+    deleteUserByid : async (connection, userId) => {
+        const sql = `
+      DELETE
+        FROM user
+       WHERE id= ?`
+    const [rows] = await connection.execute(sql, [userId])
+    
+
+    if (rows.affectedRows == 0) {
+        throw Error("사용자 정보 입력 실패")
+        }
+    return rows
+},
+    
 }

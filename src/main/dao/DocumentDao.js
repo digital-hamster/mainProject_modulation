@@ -61,5 +61,19 @@ module.exports = {
 
     return rows
     },
+    deleteDocumentByUserId : async (connection, userId) => {
+        const sql =
+        `DELETE
+           FROM document
+          WHERE user_id = ?`
+
+    const [rows] = await connection.execute(sql,[userId])
+
+    if (!rows || rows.length === 0) {
+        throw Error("게시글 삭제에 실패했습니다")
+        }
+
+    return rows
+    },
 
 }
