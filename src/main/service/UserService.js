@@ -78,4 +78,19 @@ module.exports = {
 
         return { result : true }
     },
+    //비밀번호 변경
+    changeUserPasswordConnection: async (connection, password, changePw, userId) => {
+
+        const userPassword = await UserDao.findPasswordById(connection, userId)
+        if (CryptoUtil.comparePassword(password, userPassword) === false) {
+            throw Error("현재 비밀번호가 일치하지 않습니다")
+        }
+
+        const result = await UserDao.changePasswordByRequest(connection, changePw, userId)
+        if (!result || result.length < 1) {
+            throw Error("비밀번호 변경에 실패했습니다")
+        }
+
+        return result
+    },
 }

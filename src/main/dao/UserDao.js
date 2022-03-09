@@ -1,7 +1,7 @@
 const CryptoUtil = require("../config/CryptoUtil")
 
 module.exports = {
-    findUserById : async (id, connection) => {
+    findUserById : async (connection, id) => {
         const sql = `
             SELECT id
             FROM user
@@ -139,5 +139,35 @@ module.exports = {
         }
 
         return rows
+    },
+    findPasswordById : async (connection, userId) => {
+        const sql = `
+            SELECT password
+              FROM user
+             WHERE id = ?;`
+        const [rows] = await connection.execute(sql, [userId])
+
+        const userInform = rows[0]
+
+        if (!userInform || rows.length === 0) {
+            throw Error("존재하지 않는 사용자입니다.")
+        }
+
+        return rows[0]
+    },
+    changePasswordByRequest : async (connection, changePw, userId) => {
+        const sql =
+        `UPDATE user
+            SET password = ?
+          WHERE id = ?;`
+        const [rows] = await connection.execute(sql, [CryptoUtil.encryptByBcrypt(changePw), userId])
+
+        const userInform = rows[0]
+
+        if (!userInform || rows.length === 0) {
+            throw Error("존재하지 않는 사용자입니다.")
+        }
+
+        return rows[0]
     },
 }

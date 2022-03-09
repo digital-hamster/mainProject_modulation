@@ -1,4 +1,4 @@
-class ResetUserPassword {
+class ResetUserPasswordDto {
     email = ""
 
     constructor(req) {
@@ -15,4 +15,4 @@ class ResetUserPassword {
     }
 }
 
-module.exports = ResetUserPassword
+module.exports = ResetUserPasswordDto
