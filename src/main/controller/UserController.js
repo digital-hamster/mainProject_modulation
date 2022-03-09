@@ -1,5 +1,3 @@
-
-
 const Database = require("../config/Database")
 const Mailgun = require("../config/Mailgun")
 const Auth = require("../config/Auth")
@@ -12,7 +10,6 @@ const ChangeUserAuthCodeDto = require("../dto/user/ChangeUserAuthCodeDto")
 const ResetUserPasswordDto = require("../dto/user/ResetUserPasswordDto")
 const ChangeUserPasswordDto = require("../dao/ChangeUserPasswordDto")
 const DeleteUserDto = require("../dto/user/DeleteUserDto")
-
 
 // 회원가입 >> ㅇㅇ
 // 정식회원 변경 >> ㅇㅇ
@@ -55,7 +52,7 @@ module.exports = {
 
             //send authCode email
             await Mailgun.sendAuthCode(email, authCode)
-            res.output = { result : true }
+            res.output = { result: true }
             next()
         },
     },
@@ -70,7 +67,7 @@ module.exports = {
             const connection = await Database.getConnection(res)
             await UserService.changeAuthConnection(connection, request)
 
-            res.output = { result : true }
+            res.output = { result: true }
             next()
         },
     },
@@ -84,9 +81,6 @@ module.exports = {
             const connection = await Database.getConnection(res)
             const result = await UserService.loginUserConnection(connection, request) //dao의 return userInfrom을 result 결과로 담은거임 !!!
 
-            //res.output = await UserService.loginUserConnection(connection, request)
-            // res.output = { result : true}
-
             let formalMember = true
             let admin = true
             if (result.permission !== 1) {
@@ -96,7 +90,10 @@ module.exports = {
                 admin = false
             }
 
-            res.output = { result : { Token: Auth.signToken(result.id, result.permission) }, ...{formalMember: formalMember, admin: admin} }
+            res.output = {
+                result: { Token: Auth.signToken(result.id, result.permission) },
+                ...{ formalMember: formalMember, admin: admin },
+            }
             next()
         },
     },
@@ -115,7 +112,7 @@ module.exports = {
             const connection = await Database.getConnection(res)
             await UserService.resetUserPassword(connection, email, changedPassword)
 
-            res.output = { result : true }
+            res.output = { result: true }
             next()
         },
     },
@@ -130,11 +127,11 @@ module.exports = {
             const connection = await Database.getConnection(res)
             await UserService.changeUserPasswordConnection(connection, password, changePw, userId)
 
-            res.output = { result : true }
+            res.output = { result: true }
             next()
         },
     },
-    //회원탈퇴
+    // 회원탈퇴 >>>>>>>>> 니도 왜 문제야 나 이러면 화나서 그냥 엎고 처음부터 다시 만들거야 ..진심이야 ..
     deleteUser: {
         method: HttpMethod.DELETE,
         path: "/users/:userId",

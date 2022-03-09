@@ -17,7 +17,7 @@ class CreateDocumentDto {
     constructor(req) {
         const { buffer, mimeType, originalname } = req.file
         const { title, category, content, mapLink, searchWord } = req.body
-        const  userId  = req.userDetail.id
+        const userId = req.userDetail.id
 
         this.title = title
         this.category = category

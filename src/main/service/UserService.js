@@ -1,7 +1,7 @@
 const md5 = require("md5")
 const UserDao = require("../dao/UserDao") //db쿼리를 실행해야하니까
 const DocumentDao = require("../dao/DocumentDao")
-
+const CryptoUtil = require("../config/CryptoUtil")
 
 module.exports = {
     selectUserExample: async (connection) => {
@@ -77,12 +77,12 @@ module.exports = {
             throw Error("사용자 정보가 없습니다")
         }
 
-        return { result : true }
+        return { result: true }
     },
     //비밀번호 변경
     changeUserPasswordConnection: async (connection, password, changePw, userId) => {
         const userPassword = await UserDao.findPasswordById(connection, userId)
-        if (CryptoUtil.comparePassword(password, userPassword) === false) {
+        if (CryptoUtil.comparePassword(password, userPassword.password) === false) {
             throw Error("현재 비밀번호가 일치하지 않습니다")
         }
 
@@ -91,14 +91,15 @@ module.exports = {
             throw Error("비밀번호 변경에 실패했습니다")
         }
 
-        return { result : true }
+        return { result: true }
     },
+    //회원탈퇴
     deleteUserConnection: async (connection, request) => {
-        //authCode발급
         const { userId } = request
         //db에서 찾아온 이메일 있어야 함
         const userEmail = await UserDao.selectEmailByUserId(connection, userId)
-        await UserDao.deleteAuthCodeByid(connection, userEmail)
+
+        await UserDao.deleteAuthCodeByEmail(connection, userEmail)
         await DocumentDao.deleteDocumentByUserId(connection, userId)
         const userResult = await UserDao.deleteUserByid(connection, userId)
         if (!userResult || userResult.length < 1) {

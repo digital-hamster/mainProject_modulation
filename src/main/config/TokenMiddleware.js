@@ -13,37 +13,35 @@ const TokenMiddleware = {
         const path = req.path //path만 받아오기
         const method = req.method //and문 사용해서 조건 추가해주기 >> method만 안 겹치는 경우는 !
 
-        const isPass = passList.some(el => new RegExp(el.path).test(path) && el.method.name === method)
+        const isPass = passList.some((el) => new RegExp(el.path).test(path) && el.method.name === method)
         //find 조건에 일치하는 배열에 원소를 찾아서 리턴
         //some 조건에 일치하는게 있으면 true 없으면 false
         //every 조건에 모두 일치하면 true 아니면 false
 
         if (isPass) {
             next()
-            return;
+            return
         }
 
         //토큰검사
         const { authorization } = req.headers
-
 
         if (!authorization) {
             throw Error("인증 토큰이 없습니다.")
         }
 
         //const {jwtPayload} =Auth
-        
+
         const token = authorization.replace(/Bearer[+\s]/g, "")
         const jwtPayload = Auth.verifyToken(token)
 
         req.userDetail = jwtPayload //미들웨어 밖으로 값을 넘겨주고 계속 쓸 거임
-        
+
         // 권한 검사 >> 토큰을 사용하지 않는  api를 제외하고 모든 checkList에 있어야 함
-        const apiInfo = checkList.find(el => new RegExp(el.path).test(path) && el.method.name === method)
-        
-        
+        const apiInfo = checkList.find((el) => new RegExp(el.path).test(path) && el.method.name === method)
+
         if (!apiInfo) {
-            throw Error("토큰 정보를 불러올 수 없습니다")//"존재하지 않는 apiInfo입니다."
+            throw Error("토큰 정보를 불러올 수 없습니다") //"존재하지 않는 apiInfo입니다."
         }
         //apiInfo 패턴 조건에 맞는 path가 아니면 apiInfo가 들어오지 않음
         //!!!>> 데이터형을 해당 api에서 걸러내는 게 아니라,
@@ -54,14 +52,13 @@ const TokenMiddleware = {
             throw Error("권한이 부족합니다.")
         }
         // 권한 검사 끝
-        
+
         // 실제 존재하는 유저인지 검증
         const connection = await Database.getConnection(res)
         await AuthService.checkUser(jwtPayload, connection)
 
-
-        res.dbConnection = null;
-        connection.release();
+        res.dbConnection = null
+        connection.release()
         next()
     }),
 }
@@ -69,7 +66,8 @@ const TokenMiddleware = {
 const numberPattern = "/\\d+"
 const allPattern = "/\\w+"
 
-const passList = [ //pass, check 정적임, 설정값을 모듈로 분리해서, 보기좋은 형태로 모듈화, 파일에 따로 두기 >> 모듈로 분리해서 불러오기!
+const passList = [
+    //pass, check 정적임, 설정값을 모듈로 분리해서, 보기좋은 형태로 모듈화, 파일에 따로 두기 >> 모듈로 분리해서 불러오기!
     {
         path: "/example",
         method: HttpMethod.GET,
@@ -82,58 +80,67 @@ const passList = [ //pass, check 정적임, 설정값을 모듈로 분리해서,
         path: "/health-check",
         method: HttpMethod.GET,
     },
-    {   //회원가입
+    {
+        //회원가입
         path: "/users",
-        method: HttpMethod.POST
+        method: HttpMethod.POST,
     },
-    {   //정식회원
+    {
+        //정식회원
         path: "/auths" + allPattern,
-        method: HttpMethod.POST
-
+        method: HttpMethod.POST,
     },
-    {   //로그인
+    {
+        //로그인
         path: "/login",
-        method: HttpMethod.POST
+        method: HttpMethod.POST,
     },
-    {   //비밀번호 초기화
+    {
+        //비밀번호 초기화
         path: "/reset-password",
-        method: HttpMethod.POST
+        method: HttpMethod.POST,
     },
-    {   //게시글 조회
+    {
+        //게시글 조회
         path: "/documents",
-        method: HttpMethod.GET
+        method: HttpMethod.GET,
     },
 ]
 
-const checkList = [ //api만들 때마다 여기서 추가해줘야함 >> 최소 권한 검사 + 어쩌꾸.
+const checkList = [
+    //api만들 때마다 여기서 추가해줘야함 >> 최소 권한 검사 + 어쩌꾸.
     //회원가입중에 임시회원도 토큰은 있기 때문에, 0부터 가능하다고 해서 무시하면 X
-    {   //비밀번호 변경
+    {
+        //비밀번호 변경
         path: "/users" + numberPattern,
         method: HttpMethod.PUT,
-        permission: 0
+        permission: 0,
     },
-    {   //회원탈퇴
+    {
+        //회원탈퇴
         path: "/users" + numberPattern,
         method: HttpMethod.DELETE,
-        permission: 0
+        permission: 0,
     },
-    {   //게시글 생성
+    {
+        //게시글 생성
         path: "/documents",
         method: HttpMethod.POST,
-        permission: 1
+        permission: 1,
     },
-    {   //게시글 수정
+    {
+        //게시글 수정
         path: "/documents" + numberPattern,
         method: HttpMethod.PUT,
-        permission: 2
+        permission: 2,
     },
-    {   //게시글 삭제
+    {
+        //게시글 삭제
         path: "/documents" + numberPattern,
         method: HttpMethod.DELETE,
-        permission: 2
+        permission: 2,
     },
 ]
-
 
 //미들웨어는 중간 장치라서 next만 하면 됌
 //토큰 api를 호출해서 저기서 사용해야함

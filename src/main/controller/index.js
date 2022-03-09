@@ -6,12 +6,11 @@ const UserController = require("./UserController")
 
 const registerAll = (app) => {
     // excute(app, SampleController)
-    excute(app, UserController)
-    excute(app, DocumentController)
-
+    execute(app, UserController)
+    execute(app, DocumentController)
 }
 
-function excute(app, controller) {
+function execute(app, controller) {
     Object.keys(controller).forEach((el) => {
         const { method, path, multipart, handler } = controller[el]
 
