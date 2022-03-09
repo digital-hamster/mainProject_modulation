@@ -2,6 +2,7 @@ const mailgun = require("mailgun-js")
 const setting = require("../security/setting")
 const { apiKey, domain } = setting.mailgun
 const mg = mailgun({ apiKey: apiKey, domain: domain })
+const mailAdress = domain.replace("www.", "")
 
 const Mailgun = {
     resetPassword: async (email) => {
@@ -9,7 +10,7 @@ const Mailgun = {
         const userName = "digital-hamster.net" // 메일 발신자 이름 (아무거나 짓기)
 
         const data = {
-            from: `${userName} <help@${domain.replace("www.", "")}>`,
+            from: `${userName} <help@${mailAdress}>`,
             to: email,
             subject: `비밀번호 초기화에 따른 임시 비밀번호 재발급`,
             text: `임시 비밀번호: ${tempPassword}`,
@@ -28,7 +29,7 @@ const Mailgun = {
     sendAuthCode: async (email, authCode) => {
         const userName = "digital-hamster.net"
         const data = {
-            from: `${userName} <help@${domain.replace("www.", "")}>`,
+            from: `${userName} <help@${mailAdress}>`,
             to: email,
             subject: `인증 링크 전달해드립니다`,
             text: `인증 이후에 재로그인 해주세요: http://localhost:3000/auth?authcode=${authCode}`,
@@ -44,5 +45,5 @@ const Mailgun = {
         return result
     },
 }
-
+// from: `${userName} <help@${domain.replace("www.", "")}>`,
 module.exports = Mailgun

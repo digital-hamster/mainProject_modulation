@@ -2,12 +2,22 @@ const Database = require("../config/Database")
 const DocumentService = require("../service/DocumentService")
 const HttpMethod = require("../types/HttpMethod")
 const multer = require("multer")()
+const CategoryType = require("../types/CategoryType")
 const CreateDocumentDto = require("../dto/document/CreateDocumentDto")
 const SelectDocumentDto = require("../dto/document/selectDocumentDto")
 const UpdateDocumentDto = require("../dto/document/UpdateDocumentDto")
 const DeleteDocumentDto = require("../dto/document/DeleteDocumentDto")
 
 module.exports = {
+    //카테고리조회
+    selectCategories: {
+        method: HttpMethod.GET,
+        path: "/categories",
+        handler: async (req, res, next) => {
+            res.output = { result: CategoryType }
+            next()
+        },
+    },
     //게시글 업로드
     createDocument: {
         method: HttpMethod.POST,

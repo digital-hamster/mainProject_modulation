@@ -105,6 +105,11 @@ const passList = [
         path: "/documents",
         method: HttpMethod.GET,
     },
+    {
+        //카테고리 항목 조회
+        path: "/categories",
+        method: HttpMethod.GET,
+    },
 ]
 
 const checkList = [

@@ -1,18 +1,26 @@
 const CategoryType = {
-    HOBBY: {
-        name: "HOBBY",
-        label: "취미",
+    PIZZA: {
+        name: "PIZZA",
+        //label: "피자", //프론트에게 가는 설명으로 이해했지만, 오히려 혼란올 것 같아서 뺏습니다 ㅠ
     },
-    EXERCISE: {
-        name: "HOBBY",
-        label: "운동",
+    CHICKEN: {
+        name: "CHICKEN",
     },
-    ETC: {
-        name: "ETC",
-        label: "기타",
+    BURGER: {
+        name: "BURGER",
+    },
+    CHINESE: {
+        name: "CHINESE",
+    },
+    NOODLE: {
+        name: "NOODLE",
+    },
+    PASTA: {
+        name: "PASTA",
     },
 
     has: (category) => {
         return Object.keys(CategoryType).some((el) => CategoryType[el].name === category)
     },
 }
+module.exports = CategoryType
