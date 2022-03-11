@@ -60,39 +60,38 @@ describe("/health-check", () => {
 })
 
 //회원가입
-describe("createUser", () => {
-    describe("사용자가 회원가입을 할 때", () => {
-        it("데이터가 잘 들어가서 api가 실행된다", async () => {
-            const response = await request(app)
-                .post("/users")
-                .set("Accept", "application/json")
-                .type("application/json")
-                .send({
-                    email: "waterlove1212@naver.com",
-                    nickname: "생계형햄스터",
-                    password: "root1234",
-                })
+// describe("createUser", () => {
+//     describe("사용자가 회원가입을 할 때", () => {
+//         it("데이터가 잘 들어가서 api가 실행된다", async () => {
+//             const response = await request(app)
+//                 .post("/users")
+//                 .set("Accept", "application/json")
+//                 .type("application/json")
+//                 .send({
+//                     email: "waterlove1212@naver.com",
+//                     nickname: "생계형햄스터",
+//                     password: "root1234",
+//                 })
 
-            const expectedResult = { result: true }
-            expect(response.body).toEqual(expectedResult)
-            expect(response.status).toBe(200)
+//             const expectedResult = { result: true }
+//             expect(response.body).toEqual(expectedResult)
+//             expect(response.status).toBe(200)
+//         })
+//     })
 
-        })
-    })
+//     describe("DB에 중복된 값이 있어서 실패한다", () => {
+//         it("error", async () => {
+//             const response = await request(app)
+//                 .post("/users")
+//                 .set("Accept", "application/json")
+//                 .type("application/json")
+//                 .query({ error: true })
+//                 .send()
 
-    describe("DB에 중복된 값이 있어서 실패한다", () => {
-        it("error", async () => {
-            const response = await request(app)
-                .post("/users")
-                .set("Accept", "application/json")
-                .type("application/json")
-                .query({ error: true })
-                .send()
-
-            expect(response.status).toBe(400)
-        })
-    })
-})
+//             expect(response.status).toBe(400)
+//         })
+//     })
+// })
 
 //정식회원 변경하기
 
@@ -105,17 +104,35 @@ describe("login", () => {
                 .set("Accept", "application/json")
                 .type("application/json")
                 .send({
-                    email: "waterlove1439@naver.com",
+                    email: "waterlove121@naver.com",
                     password: "root1234",
                 })
-
-            const expectedResult = { result: true }
+                .auth()
+            //여기에 Auth를 해야하나 ??
+            const expectedResult = {
+                result: {
+                    //얘는 어케 처리해야할지 감이 안 옴 헤더를 연결해서 길게 헤더를 .. 받아야하나 ??
+                    Token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ3d3cuYXBpLmRpZ2l0YWwtaGFtc3Rlci5uZXQiLCJpYXQiOjE2NDY5MjM4Nzg0NjIsImV4cCI6MTY0NzAxMDI3ODQ2MiwiaWQiOjM1NSwicm9sZXMiOm51bGwsInBlcm1pc3Npb24iOjB9.InUw9KTZaC2wt0XPHsnXcANcMMZGROhTIEhQ8PwxtJs",
+                },
+                formalMember: false,
+                admin: false,
+            }
             expect(response.body).toEqual(expectedResult)
             expect(response.status).toBe(200)
-
         })
     })
+    describe("이메일이 틀렸다", () => {
+        it("존재하지 않는 사용자이다", async () => {
+            const response = await request(app)
+                .post("/login")
+                .set("Accept", "application/json")
+                .type("application/json")
+                .query({ error: true })
+                .send()
 
+            expect(response.status).toBe(400)
+        })
+    })
     describe("값이 일치하지 않아서 로그인 에러가 뜬다", () => {
         it("error", async () => {
             const response = await request(app)
