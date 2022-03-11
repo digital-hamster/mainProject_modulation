@@ -1,3 +1,5 @@
+const Email = require("../../config/Email")
+
 class LoginUserDto {
     email = ""
     password = ""
@@ -12,6 +14,9 @@ class LoginUserDto {
     validate() {
         if (!this.email) {
             throw Error("이메일을 입력해주세요")
+        }
+        if (Email.verifyEmail(this.email) === false) {
+            throw Error("올바른 이메일 형식이 아닙니다")
         }
         if (!this.password) {
             throw Error("비밀번호를 입력해주세요")

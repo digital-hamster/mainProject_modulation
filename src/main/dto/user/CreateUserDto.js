@@ -1,3 +1,5 @@
+const Email = require("../../config/Email")
+
 class CreateUserDto {
     nickname = ""
     email = ""
@@ -14,6 +16,9 @@ class CreateUserDto {
     validate() {
         if (!this.email) {
             throw Error("이메일을 입력해주세요")
+        }
+        if (Email.verifyEmail(this.email) === false) {
+            throw Error("올바른 이메일 형식이 아닙니다")
         }
         if (!this.nickname) {
             throw Error("이름을 입력해주세요")
