@@ -7,16 +7,6 @@ class FindUsersRequest {
         this.limit = limit
         this.offset = offset
     }
-
-    //validate()
 }
-
-// class FindUsersResponse {
-//     result = ""
-
-//     constructor() {
-//         this.result = "test success"
-//     }
-// }
 
 module.exports = { FindUsersRequest } //, FindUsersResponse
