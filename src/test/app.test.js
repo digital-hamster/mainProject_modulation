@@ -1,7 +1,8 @@
 const request = require("supertest")
 const app = require("../main/app")
+const Auth = require("../main/config/Auth")
 
-describe("/example", () => {
+describe("/example", () => { //니들은 또 왜 >> 토큰 패스에 안넣어서 그냐 ?? 아닌데 뭐가 문제니
     describe("정상 요청을 하면", () => {
         it("정상 응답이 온다.", async () => {
             const response = await request(app)
@@ -96,52 +97,86 @@ describe("/health-check", () => {
 //정식회원 변경하기
 
 //로그인
-describe("login", () => {
-    describe("로그인", () => {
-        it("값이 일치해서 로그인이 된다", async () => {
+// describe("login", () => {
+//     describe("로그인", () => {
+//         it("값이 일치해서 로그인이 된다", async () => {
+//             const response = await request(app)
+//                 .post("/login")
+//                 .set("Accept", "application/json")
+//                 .type("application/json")
+//                 .send({
+//                     email: "waterlove121@naver.com",
+//                     password: "root1234",
+//                 })
+//                 .auth("userDetail.id", "userDetail.permission")
+//                 .responseType()
+//             //여기에 Auth를 해야하나 ??
+//             const expectedResult = {
+//                 result: {
+//                     //얘는 어케 처리해야할지 감이 안 옴 헤더를 연결해서 길게 헤더를 .. 받아야하나 ??
+//                     Token: Auth.signToken(userDetail.id, userDetail.permission),// ?>????????
+//                 },
+//                 formalMember: false,
+//                 admin: false,
+//             }
+//             expect(response.body).toEqual(expectedResult)
+//             expect(response.status).toBe(200)
+//         })
+//     })
+//     describe("이메일이 틀렸다", () => {
+//         it("존재하지 않는 사용자이다", async () => {
+//             const response = await request(app)
+//                 .post("/login")
+//                 .set("Accept", "application/json")
+//                 .type("application/json")
+//                 .query({ error: true })
+//                 .send()
+
+//             expect(response.status).toBe(400)
+//         })
+//     })
+//     describe("값이 일치하지 않아서 로그인 에러가 뜬다", () => {
+//         it("error", async () => {
+//             const response = await request(app)
+//                 .post("/login")
+//                 .set("Accept", "application/json")
+//                 .type("application/json")
+//                 .query({ error: true })
+//                 .send()
+
+//             expect(response.status).toBe(400)
+//         })
+//     })
+// })
+
+//비밀번호 초기화
+describe("resetPasswordByUser", () => {
+    describe("사용자가 비밀번호 초기화를 할 때", () => {
+        it("이메일이 보내진다", async () => {
             const response = await request(app)
-                .post("/login")
+                .post("/reset-password")
                 .set("Accept", "application/json")
                 .type("application/json")
-                .send({
-                    email: "waterlove121@naver.com",
-                    password: "root1234",
+                .send({ //바디
+                    //email: "waterlove121@naver.com",
                 })
-                .auth()
-            //여기에 Auth를 해야하나 ??
-            const expectedResult = {
-                result: {
-                    //얘는 어케 처리해야할지 감이 안 옴 헤더를 연결해서 길게 헤더를 .. 받아야하나 ??
-                    Token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ3d3cuYXBpLmRpZ2l0YWwtaGFtc3Rlci5uZXQiLCJpYXQiOjE2NDY5MjM4Nzg0NjIsImV4cCI6MTY0NzAxMDI3ODQ2MiwiaWQiOjM1NSwicm9sZXMiOm51bGwsInBlcm1pc3Npb24iOjB9.InUw9KTZaC2wt0XPHsnXcANcMMZGROhTIEhQ8PwxtJs",
-                },
-                formalMember: false,
-                admin: false,
-            }
+
+            const expectedResult = { result: true }
             expect(response.body).toEqual(expectedResult)
             expect(response.status).toBe(200)
         })
     })
-    describe("이메일이 틀렸다", () => {
-        it("존재하지 않는 사용자이다", async () => {
+
+    describe("이메일 형식이 아니여서", () => {
+        it("에러가 뜬다", async () => {
             const response = await request(app)
-                .post("/login")
+                .post("/reset-password")
                 .set("Accept", "application/json")
                 .type("application/json")
                 .query({ error: true })
-                .send()
-
-            expect(response.status).toBe(400)
-        })
-    })
-    describe("값이 일치하지 않아서 로그인 에러가 뜬다", () => {
-        it("error", async () => {
-            const response = await request(app)
-                .post("/login")
-                .set("Accept", "application/json")
-                .type("application/json")
-                .query({ error: true })
-                .send()
-
+                .send({ //바디
+                    email: "waterlove1212naver.com",
+                })
             expect(response.status).toBe(400)
         })
     })
