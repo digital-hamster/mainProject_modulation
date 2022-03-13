@@ -3,7 +3,7 @@ const SampleDao = require("../dao/SampleDao")
 module.exports = {
     doExample: (request) => {
         if (!request.value) {
-            return "hello world!"
+            return "example API"
         }
 
         return request.value

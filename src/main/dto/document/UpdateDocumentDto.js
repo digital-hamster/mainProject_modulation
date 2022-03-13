@@ -12,14 +12,13 @@ class UpdateDocumentDto {
     originalname = ""
     participant = 0
     content = ""
-    mapLink = ""
-    searchWord = ''
+    searchWord = ""
 
     constructor(req) {
         const { documentId } = req.params
         const { buffer, mimeType, originalname } = req.file
-        const { title, category, content, mapLink, searchWord } = req.body
-        const  userId  = req.userDetail.id
+        const { title, category, content, searchWord } = req.body
+        const userId = req.userDetail.id
 
         this.documentId = documentId
         this.title = title
@@ -29,13 +28,12 @@ class UpdateDocumentDto {
         this.mimeType = mimeType
         this.originalname = originalname
         this.content = content
-        this.mapLink = mapLink
         this.searchWord = searchWord
         this.validate()
     }
 
     validate() {
-        if(!this.documentId){
+        if (!this.documentId) {
             throw Error("게시글에 대한 정보가 없습니다")
         }
         if (!this.title) {
@@ -52,9 +50,6 @@ class UpdateDocumentDto {
         }
         if (!this.content) {
             throw Error("사용자의 리뷰를 불러올 수 없습니다")
-        }
-        if (!this.mapLink) {
-            throw Error("음식점 관련 정보를 불러올 수 없습니다")
         }
         if (!this.searchWord) {
             throw Error("사용자가 입력하고자하는 정보가 없습니다")

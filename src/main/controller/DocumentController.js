@@ -43,7 +43,7 @@ module.exports = {
             const connection = await Database.getConnection(res)
             const documentResult = await DocumentService.selectDocument(connection, request)
 
-            res.output = { result: documentResult }
+            res.output = documentResult
             next()
         },
     },

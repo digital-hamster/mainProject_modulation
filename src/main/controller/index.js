@@ -1,11 +1,11 @@
 const AsyncWrapper = require("../config/AsyncWrapper")
 const HttpMethod = require("../types/HttpMethod")
 const DocumentController = require("./DocumentController")
-// const SampleController = require("./SampleController")
+const SampleController = require("./SampleController")
 const UserController = require("./UserController")
 
 const registerAll = (app) => {
-    // excute(app, SampleController)
+    execute(app, SampleController)
     execute(app, UserController)
     execute(app, DocumentController)
 }

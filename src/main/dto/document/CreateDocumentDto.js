@@ -11,12 +11,11 @@ class CreateDocumentDto {
     originalname = ""
     participant = 0
     content = ""
-    mapLink = ""
-    searchWord = ''
+    searchWord = ""
 
     constructor(req) {
         const { buffer, mimeType, originalname } = req.file
-        const { title, category, content, mapLink, searchWord } = req.body
+        const { title, category, content, searchWord } = req.body
         const userId = req.userDetail.id
 
         this.title = title
@@ -26,7 +25,6 @@ class CreateDocumentDto {
         this.mimeType = mimeType
         this.originalname = originalname
         this.content = content
-        this.mapLink = mapLink
         this.searchWord = searchWord
         this.validate()
     }
@@ -49,9 +47,6 @@ class CreateDocumentDto {
         }
         if (!this.content) {
             throw Error("사용자의 리뷰를 불러올 수 없습니다")
-        }
-        if (!this.mapLink) {
-            throw Error("음식점 관련 정보를 불러올 수 없습니다")
         }
         if (!this.searchWord) {
             throw Error("사용자가 입력하고자하는 정보가 없습니다")

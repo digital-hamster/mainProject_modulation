@@ -41,7 +41,7 @@ const TokenMiddleware = {
         const apiInfo = checkList.find((el) => new RegExp(el.path).test(path) && el.method.name === method)
 
         if (!apiInfo) {
-            throw Error("토큰 정보를 불러올 수 없습니다") //"존재하지 않는 apiInfo입니다."
+            throw Error("토큰을 사용하는 api를 제대로 검사하지 못했습니다 (apiInfo)") //"존재하지 않는 apiInfo입니다."
         }
         //apiInfo 패턴 조건에 맞는 path가 아니면 apiInfo가 들어오지 않음
         //!!!>> 데이터형을 해당 api에서 걸러내는 게 아니라,
@@ -118,6 +118,7 @@ const checkList = [
     {
         //비밀번호 변경
         path: "/users" + numberPattern,
+        // /users/[0-9]+
         method: HttpMethod.PUT,
         permission: 0,
     },

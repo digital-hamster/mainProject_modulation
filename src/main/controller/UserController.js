@@ -8,15 +8,9 @@ const { CreateUserDto } = require("../dto/user/CreateUserDto")
 const { LoginUserDto } = require("../dto/user/LoginUserDto")
 const ChangeUserAuthCodeDto = require("../dto/user/ChangeUserAuthCodeDto")
 const ResetUserPasswordDto = require("../dto/user/ResetUserPasswordDto")
-const ChangeUserPasswordDto = require("../dao/ChangeUserPasswordDto")
+const ChangeUserPasswordDto = require("../dto/user/ChangeUserPasswordDto")
 const DeleteUserDto = require("../dto/user/DeleteUserDto")
 
-// 회원가입 >> ㅇㅇ
-// 정식회원 변경 >> ㅇㅇ
-// 로그인 >> ㅇㅇ
-// 비밀번호 초기화 >> ㅇㅇ
-// 비밀번호 변경
-// 회원탈퇴
 module.exports = {
     //유저 정보 조회 api*
     selectUserExample: {
