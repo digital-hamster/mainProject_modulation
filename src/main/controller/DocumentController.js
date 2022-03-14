@@ -10,6 +10,7 @@ const DeleteDocumentDto = require("../dto/document/DeleteDocumentDto")
 
 module.exports = {
     //카테고리조회
+    //피드백 (실패) 할많하않
     selectCategories: {
         method: HttpMethod.GET,
         path: "/categories",
@@ -19,6 +20,7 @@ module.exports = {
         },
     },
     //게시글 업로드
+    //피드백 (성공)
     createDocument: {
         method: HttpMethod.POST,
         path: "/documents",

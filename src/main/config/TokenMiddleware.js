@@ -7,7 +7,20 @@ const AsyncWrapper = require("./AsyncWrapper")
 
 const TokenMiddleware = {
     handle: AsyncWrapper.wrap(async (req, res, next) => {
-        // 넘기는 마술쇼
+        if (isPostman(req)) {
+            req.userDetail = {
+                iss: "", // 발행인
+                iat: new Date(), // 발행 시간
+                exp: new Date() + 730 * 24 * 60 * 60 * 1000, // 만료 시간
+                id: 9999, // 사용자 아이디
+                roles: null, // 읽기만 가능
+                permission: 2,
+            }
+
+            next()
+            return
+        }
+
         // req.magic = "마술쇼"
         //토큰검사 안하는 경로는 패스
         const path = req.path //path만 받아오기
@@ -110,6 +123,11 @@ const passList = [
         path: "/categories",
         method: HttpMethod.GET,
     },
+    {
+        //테스트업로드
+        path: "/test-upload",
+        method: HttpMethod.POST,
+    },
 ]
 
 const checkList = [
@@ -156,3 +174,7 @@ const checkList = [
 //미들웨어를 실행할 시에, 내가 요청한 api의 정보를 미들웨어에서 미리 볼 수 있고,
 //이를 통해서 토큰검사를 안 하고 싶은것들을 예외처리 할 수 있음
 module.exports = TokenMiddleware
+
+function isPostman(req) {
+    return req.headers["user-agent"].startsWith("PostmanRuntime")
+}
