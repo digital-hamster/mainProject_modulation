@@ -446,7 +446,6 @@ describe("사용자가 게시글을 올릴 때", () => {
                     title: "테스트",
                     category: "ForTest",
                     content: "테스트용입니다",
-                    mapLink: "https://",
                     searchWord: "테스트",
                 })
                 .buffer() //? 얘는 근데 폼에서 이미지 받는디
