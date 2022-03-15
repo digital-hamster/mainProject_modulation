@@ -1,7 +1,10 @@
 const SampleDao = require("../dao/SampleDao")
 
 module.exports = {
-    doExample: (request) => {
+    doExample: (request, error) => {
+        if (error === "true") {
+            throw Error("잘못된 요청입니다.")
+        }
         if (!request.value) {
             return "example API"
         }

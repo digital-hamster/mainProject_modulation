@@ -1,5 +1,5 @@
 class DeleteDocumentDto {
-    docuementId = ""
+    documentId = ""
 
     constructor(req) {
         const { documentId } = req.params

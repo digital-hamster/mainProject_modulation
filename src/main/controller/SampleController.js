@@ -11,7 +11,9 @@ module.exports = {
         path: "/example",
         handler: async (req, res, next) => {
             const request = new SampleApiRequest(req)
-            res.output = await SampleService.doExample(request)
+            const { error } = req.query
+            res.output = await SampleService.doExample(request, error)
+
             next()
         },
     },

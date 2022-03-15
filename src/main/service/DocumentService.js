@@ -50,7 +50,7 @@ module.exports = {
     // 피드백 열받음
     deleteDocument: async (connection, request) => {
         const document = await DocumentDao.selectDocumentById(connection, request.documentId)
-        await DocumentDao.deleteDocumentByRequest(connection, document.Id)
+        await DocumentDao.deleteDocumentByRequest(connection, document[0].id)
 
         return { result: true }
     },

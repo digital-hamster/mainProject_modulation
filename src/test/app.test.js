@@ -81,7 +81,7 @@ describe("/image-upload-test", () => {
     })
 })
 
-//회원가입
+회원가입
 describe("createUser", () => {
     describe("사용자가 회원가입을 할 때", () => {
         it("데이터가 잘 들어가서 api가 실행된다", async () => {
@@ -90,7 +90,7 @@ describe("createUser", () => {
                 .set("Accept", "application/json")
                 .type("application/json")
                 .send({
-                    email: "waterlove1439@naver.com",
+                    email: "wateerlove1439@gmail.com",
                     nickname: "생계형햄스터",
                     password: "root1234",
                 })
@@ -109,7 +109,7 @@ describe("createUser", () => {
                 .type("application/json")
                 .query({ error: true })
                 .send({
-                    email: "waterlove121@naver.com",
+                    email: "waterlove1439@naver.com",
                 })
 
             expect(response.status).toBe(400)
@@ -137,7 +137,7 @@ describe("changeAuthByUser", () => {
     describe("사용자가 정식회원 요청을 할 때", () => {
         it("데이터가 잘 들어가서 api가 실행된다", async () => {
             const response = await request(app)
-                .post("/auths/e18b16b66b21aadc2585dff669cdda92")
+                .post("/auths/8f34b17ef9f7cd756d902fd4439d253e")
                 .set("Accept", "application/json")
                 .type("application/json")
                 .send()
@@ -171,17 +171,9 @@ describe("사용자가 로그인을 시도할 때", () => {
                 .set("Accept", "application/json")
                 .type("application/json")
                 .send({
-                    email: "waterlove1439@naver.com",
-                    password: "root12345",
+                    email: "waterlove121@naver.com",
+                    password: "root1234",
                 })
-
-            // const expectedResult = {
-            //     result: {
-            //         Token: userToken,
-            //     },
-            //     formalMember: false,
-            //     admin: true,
-            // }
 
             expect(response.status).toBe(200)
             expect(response.body).toEqual(
@@ -231,7 +223,7 @@ describe("resetPasswordByUser", () => {
                 .type("application/json")
                 .send({
                     //바디
-                    email: "waterlove121@naver.com",
+                    email: "waterlove1439@naver.com",
                 })
 
             const expectedResult = { result: true }
@@ -259,8 +251,8 @@ describe("resetPasswordByUser", () => {
 // //비밀번호 변경
 describe("사용자가 비밀번호 변경을 시도할 때", () => {
     //토큰설정
-    const id = 371
-    const permission = 1
+    const id = 9999
+    const permission = 2
     const Token = Auth.signToken(id, permission)
     describe("비밀번호가 일치해서", () => {
         it("보내는 값으로 비밀번호가 변경된다", async () => {
@@ -290,7 +282,7 @@ describe("사용자가 비밀번호 변경을 시도할 때", () => {
                 .set("authorization", Token)
                 .query({ error: true })
                 .send({
-                    password: "rootd12345",
+                    password: "rootd123d45",
                     changePw: "root1234",
                 })
             expect(response.status).toBe(400)
@@ -300,7 +292,7 @@ describe("사용자가 비밀번호 변경을 시도할 때", () => {
 
 // //회원탈퇴
 describe("사용자가 회원탈퇴를 시도할 때", () => {
-    const id = 370
+    const id = 10016
     const permission = 0
     const Token = Auth.signToken(id, permission)
     describe("데이터가 잘 보내져서", () => {
@@ -311,7 +303,7 @@ describe("사용자가 회원탈퇴를 시도할 때", () => {
                 .set("authorization", Token)
                 .type("application/json")
                 .send({
-                    email: "waterlove1439@naver.com",
+                    email: "wateerlove1439@gmail.com",
                 })
 
             const expectedResult = { result: true }
@@ -388,18 +380,6 @@ describe("프론트가 카테고리를 조회할 때", () => {
             expect(response.status).toBe(200)
         })
     })
-    describe("요청이 제대로 보내지지 않아서", () => {
-        it("에러가 뜬다", async () => {
-            const response = await request(app)
-                .get("/categories")
-                .set("Accept", "application/json")
-                .type("application/json")
-                .send()
-                .query({ error: true })
-
-            expect(response.status).toBe(400)
-        })
-    })
 })
 
 // //게시글 조회
@@ -411,7 +391,7 @@ describe("사용자가 게시글을 조회할 때", () => {
                 .get("/documents")
                 .set("Accept", "application/json")
                 .type("application/json")
-                .query({ limit: 3, offset: 0, category: "forTest" }) //테스트 돌릴 용도의 카테고리입니다
+                .query({ limit: 3, offset: 0, category: "ForTest" }) //테스트 돌릴 용도의 카테고리입니다
 
             expect(response.status).toBe(200)
             expect(response.body).toEqual(
@@ -458,7 +438,7 @@ describe("사용자가 게시글을 올릴 때", () => {
                 .set("authorization", Token)
                 .type("form")
                 .field("title", "테스트용")
-                .field("category", "ForTest")
+                .field("category", "ForTeㅇst")
                 .field("userId", 9999)
                 .attach("img", path.resolve(__dirname, "./testImg.jpg"))
                 .field("content", "테스트용입니다")
@@ -491,7 +471,7 @@ describe("관리자가 게시글을 수정할 때", () => {
     const id = 9999
     const permission = 2
     const Token = Auth.signToken(id, permission)
-    const documentId = 209
+    const documentId = 218
 
     describe("값이 문제없이 들어가서", () => {
         it("게시글 수정이 성공한다", async () => {
@@ -531,19 +511,19 @@ describe("관리자가 게시글을 수정할 때", () => {
 
 // //게시글 삭제
 describe("관리자가 게시글을 삭제할 때", () => {
-    const id = 371
+    const id = 9999
     const permission = 2
     const Token = Auth.signToken(id, permission)
 
     describe("요청이 제대로 들어가", () => {
         it("게시글 삭제에 성공한다", async () => {
-            const documentId = 201
+            const documentId = 218
             const response = await request(app)
                 .delete("/documents/" + documentId)
                 .set("Accept", "application/json")
                 .type("application/json")
                 .set("authorization", Token)
-                .query({ documentId: 201 })
+                .query()
                 .send()
 
             const expectedResult = { result: true }
