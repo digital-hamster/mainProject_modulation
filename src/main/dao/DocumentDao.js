@@ -6,10 +6,6 @@ module.exports = {
 
         const [rows] = await connection.execute(sql, [title, imgUrl, userId, category, content, searchWord])
 
-        if (rows.changedRows == 0) {
-            throw Error("업로드를 실패했습니다")
-        }
-
         return rows
     },
 
@@ -24,10 +20,6 @@ module.exports = {
 
         const [rows] = await connection.execute(sql, [category, limit, offset])
 
-        if (!rows || rows.length === 0) {
-            throw Error("관련한 글을 더이상 불러올 수 없습니다")
-        }
-
         return rows[0]
     },
 
@@ -38,10 +30,6 @@ module.exports = {
          WHERE id = ?;`
 
         const [rows] = await connection.execute(sql, [title, imgUrl, category, content, searchWord, documentId])
-
-        if (rows.changedRows == 0) {
-            throw Error("게시글 수정을 실패했습니다")
-        }
 
         return rows
     },
@@ -58,28 +46,22 @@ module.exports = {
     },
     //
     deleteDocumentByRequest: async (connection, documentId) => {
-        const sql = `DELETE
+        const sql = `
+         DELETE
            FROM document
           WHERE id= ?`
 
         const [rows] = await connection.execute(sql, [documentId])
 
-        if (!rows || rows.length === 0) {
-            throw Error("게시글 삭제에 실패했습니다")
-        }
-
         return rows
     },
     deleteDocumentByUserId: async (connection, userId) => {
-        const sql = `DELETE
+        const sql = `
+         DELETE
            FROM document
           WHERE user_id = ?`
 
         const [rows] = await connection.execute(sql, [userId])
-
-        if (!rows || rows.length === 0) {
-            throw Error("게시글 삭제에 실패했습니다")
-        }
 
         return rows
     },

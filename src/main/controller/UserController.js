@@ -27,9 +27,9 @@ module.exports = {
     //     method: HttpMethod.GET,
     //     path: "/users",
     //     handler: async (req, res, next) => {
-    //         const request = new FindUsersRequest(req)
+    //         const request = new FindUsersRequest(req)//수업 때 사용한 샘플로 이름이 나 홀로 Request 입니다 ... 봐주세요 .
     //         const connection = await Database.getConnection(res)
-    //         res.output = await UserService.findUserExample(connection, request) //얘는 db connection
+    //         res.output = await UserService.findUserExample(connection, request)
     //         next()
     //     },
 
@@ -41,7 +41,7 @@ module.exports = {
             const request = new CreateUserDto(req)
             const { email } = request
 
-            const connection = await Database.getConnection(res) //Bind parameters must be array if namedPlaceholders parameter is not enabled
+            const connection = await Database.getConnection(res)
             const authCode = await UserService.createUserConnection(connection, request)
 
             //send authCode email

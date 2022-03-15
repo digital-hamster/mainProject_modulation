@@ -1,5 +1,5 @@
 class ChangeUserAuthCodeDto {
-    authcode = ''
+    authcode = ""
 
     constructor(req) {
         const { authcode } = req.params

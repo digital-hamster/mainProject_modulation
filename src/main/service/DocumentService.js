@@ -11,7 +11,19 @@ module.exports = {
             throw Error("이미지 업로드 과정에서 오류가 발생했습니다")
         }
 
-        await DocumentDao.createDocumentByRequest(connection, title, imgUrl, category, userId, content, searchWord)
+        const result = await DocumentDao.createDocumentByRequest(
+            connection,
+            title,
+            imgUrl,
+            category,
+            userId,
+            content,
+            searchWord
+        )
+
+        if (result.changedRows === 0) {
+            throw Error("업로드를 실패했습니다")
+        }
 
         return { result: true }
     },
@@ -21,14 +33,17 @@ module.exports = {
 
         const documentResult = await DocumentDao.selectDocumentByCategory(connection, category, limit, offset)
 
+        if (!documentResult || documentResult.length === 0) {
+            throw Error("관련한 글을 더이상 불러올 수 없습니다")
+        }
+
         return { result: documentResult }
     },
     //게시글수정
     updateDocument: async (connection, request) => {
         const { documentId, title, category, content, searchWord, buffer, mimeType } = request
         const document = await DocumentDao.selectDocumentById(connection, request.documentId)
-
-        if (!document) {
+        if (!document | (document.length === 0)) {
             throw Error("존재하지 않는 게시물 입니다.")
         }
 
@@ -42,16 +57,35 @@ module.exports = {
         //수정을 하기 전에
         //1. 요청에url 잇는지
         //2. 만약에 없으면 select 로 imgUrl을 넘겨주는 작업 ㄱㄱ
-        await DocumentDao.updateDocumentByRequest(connection, title, imgUrl, category, content, searchWord, documentId)
+        const result = await DocumentDao.updateDocumentByRequest(
+            connection,
+            title,
+            imgUrl,
+            category,
+            content,
+            searchWord,
+            documentId
+        )
+        if (result.changedRows === 0) {
+            throw Error("게시글 수정을 실패했습니다")
+        }
 
         return { result: true }
     },
     //게시글삭제
     // 피드백 열받음
     deleteDocument: async (connection, request) => {
-        const document = await DocumentDao.selectDocumentById(connection, request.documentId)
-        await DocumentDao.deleteDocumentByRequest(connection, document[0].id)
-
+        const { documentId } = request
+        const document = await DocumentDao.selectDocumentById(connection, documentId)
+        //request.documentId
+        //이 dao를 2번 사용하기 때문에 request.id는 빼겟..습니다 ... (select Document By id)
+        if (!document | (document.length === 0)) {
+            throw Error("존재하지 않는 게시물 입니다.")
+        }
+        const result = await DocumentDao.deleteDocumentByRequest(connection, document[0].id)
+        if (result.changedRows === 0) {
+            throw Error("게시글 삭제에 실패했습니다")
+        }
         return { result: true }
     },
 }
