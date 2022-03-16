@@ -21,7 +21,7 @@ module.exports = {
             searchWord
         )
 
-        if (result.changedRows === 0) {
+        if (result.affectedRows === 0) {
             throw Error("업로드를 실패했습니다")
         }
 
@@ -82,10 +82,13 @@ module.exports = {
         if (!document | (document.length === 0)) {
             throw Error("존재하지 않는 게시물 입니다.")
         }
-        const result = await DocumentDao.deleteDocumentByRequest(connection, document[0].id)
-        if (result.changedRows === 0) {
+        const result = await DocumentDao.deleteDocumentByDocumentId(connection, document[0].id)
+        if (result.affectedRows === 0) {
             throw Error("게시글 삭제에 실패했습니다")
         }
         return { result: true }
+        //삭제할 시에 affectedRows 하면 성공> 1나옴 ,delete, insert >> 이거 전부
+        //유저 삭제, 게시글 삭제
+        //게시글 업로드, 회원가입
     },
 }

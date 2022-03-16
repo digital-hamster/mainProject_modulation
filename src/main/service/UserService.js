@@ -47,7 +47,7 @@ module.exports = {
     changeAuthConnection: async (connection, request) => {
         const { authcode } = request
         const userEmail = await UserDao.selectEmailByAuthCode(connection, authcode)
-        if (userEmail.affectedRows == 0) {
+        if (userEmail.changedRows == 0) {
             throw Error("존재하지 않는 사용자입니다")
         }
         const checkPermission = await UserDao.selectPermissionByEmail(connection, userEmail) //check permission > 변경하려는 사용자가 정식회원인지

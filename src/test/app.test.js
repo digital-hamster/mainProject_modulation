@@ -81,7 +81,7 @@ describe("/image-upload-test", () => {
     })
 })
 
-회원가입
+//회원가입
 describe("createUser", () => {
     describe("사용자가 회원가입을 할 때", () => {
         it("데이터가 잘 들어가서 api가 실행된다", async () => {
@@ -90,7 +90,7 @@ describe("createUser", () => {
                 .set("Accept", "application/json")
                 .type("application/json")
                 .send({
-                    email: "wateerlove1439@gmail.com",
+                    email: "wateerlove1439@naver.com",
                     nickname: "생계형햄스터",
                     password: "root1234",
                 })

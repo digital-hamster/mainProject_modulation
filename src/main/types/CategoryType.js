@@ -1,22 +1,22 @@
 const CategoryType = {
     PIZZA: {
-        name: "PIZZA",
-        //label: "피자", //프론트에게 가는 설명으로 이해했지만, 오히려 혼란올 것 같아서 뺏습니다 ㅠ
+        //name: "PIZZA",
+        description: "PIZZA",
     },
     CHICKEN: {
-        name: "CHICKEN",
+        description: "CHICKEN",
     },
     BURGER: {
-        name: "BURGER",
+        description: "BURGER",
     },
     CHINESE: {
-        name: "CHINESE",
+        description: "CHINESE",
     },
     NOODLE: {
-        name: "NOODLE",
+        description: "NOODLE",
     },
     PASTA: {
-        name: "PASTA",
+        description: "PASTA",
     },
 
     has: (category) => {

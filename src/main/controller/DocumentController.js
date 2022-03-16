@@ -7,6 +7,7 @@ const CreateDocumentDto = require("../dto/document/CreateDocumentDto")
 const SelectDocumentDto = require("../dto/document/selectDocumentDto")
 const UpdateDocumentDto = require("../dto/document/UpdateDocumentDto")
 const DeleteDocumentDto = require("../dto/document/DeleteDocumentDto")
+const AnythingUtil = require("../util/AnythingUtil")
 
 module.exports = {
     //카테고리조회
@@ -15,7 +16,17 @@ module.exports = {
         method: HttpMethod.GET,
         path: "/categories",
         handler: async (req, res, next) => {
-            res.output = { result: CategoryType }
+            // function checkArray(CategoryType) {
+            //     //이거 다른 곳으로 모듈화로 빼고, 그 전에 형검사가 되는지부터
+            //     if (!CategoryType.description) {
+            //     }
+
+            //     return CategoryType.map((el) => CategoryType[el])
+            // }
+
+            res.output = { result: AnythingUtil.enumToArray(CategoryType) }
+            //res.output = { result: Object.keys(CategoryType).map((el) => CategoryType[el]) }
+            //res.output = { result: Object.keys(CategoryType).map((el) => Array.isArray(CategoryType[el])) }
             next()
         },
     },

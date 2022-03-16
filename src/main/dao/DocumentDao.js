@@ -45,7 +45,7 @@ module.exports = {
         return rows
     },
     //
-    deleteDocumentByRequest: async (connection, documentId) => {
+    deleteDocumentByDocumentId: async (connection, documentId) => {
         const sql = `
          DELETE
            FROM document
