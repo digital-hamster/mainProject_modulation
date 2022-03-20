@@ -1,6 +1,28 @@
 const CryptoUtil = require("../config/CryptoUtil")
 
 module.exports = {
+    findUserById: async (id, connection) => {
+        const sql = `
+        SELECT id
+          FROM user
+         WHERE id = ?;
+    `
+
+        const [rows] = await connection.execute(sql, [id])
+
+        return rows[0]
+    },
+    findPermissionbyUser: async (id, connection) => {
+        const sql = `
+          SELECT permission
+            FROM user
+           WHERE id = ?;
+      `
+
+        const [rows] = await connection.execute(sql, [id])
+
+        return rows[0].permission
+    },
     //회원가입
     createUser: async (connection, email, nickname, password) => {
         const sql = `
