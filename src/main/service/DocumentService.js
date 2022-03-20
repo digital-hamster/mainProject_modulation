@@ -39,7 +39,7 @@ module.exports = {
     },
     //게시글수정
     updateDocument: async (connection, request) => {
-        const { documentId, title, category, content, searchWord, buffer, mimeType } = request
+        const { documentId, title, content, searchWord, buffer, mimeType } = request
         const document = await DocumentDao.selectDocumentById(connection, request.documentId)
         if (!document | (document.length === 0)) {
             throw Error("존재하지 않는 게시물 입니다.")
@@ -50,15 +50,7 @@ module.exports = {
             throw Error("이미지 업로드 과정에서 오류가 발생했습니다")
         }
 
-        const result = await DocumentDao.updateDocument(
-            connection,
-            title,
-            imgUrl,
-            category,
-            content,
-            searchWord,
-            documentId
-        )
+        const result = await DocumentDao.updateDocument(connection, title, imgUrl, content, searchWord, documentId)
         if (result.changedRows === 0) {
             throw Error("게시글 수정을 실패했습니다")
         }

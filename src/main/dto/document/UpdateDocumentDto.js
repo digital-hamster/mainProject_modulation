@@ -11,18 +11,16 @@ class UpdateDocumentDto {
     mimeType = ""
     originalname = ""
     participant = 0
-    content = ""
     searchWord = ""
 
     constructor(req) {
         const { documentId } = req.params
         const { buffer, mimeType, originalname } = req.file
-        const { title, category, content, searchWord } = req.body
+        const { title, content, searchWord } = req.body
         const userId = req.userDetail.id
 
         this.documentId = documentId
         this.title = title
-        this.category = category
         this.userId = userId
         this.buffer = buffer
         this.mimeType = mimeType
@@ -38,9 +36,6 @@ class UpdateDocumentDto {
         }
         if (!this.title) {
             throw Error("제목을 입력해주세요")
-        }
-        if (!this.category) {
-            throw Error("항목을 입력해주세요")
         }
         if (!this.buffer) {
             throw Error("이미지를 업로드 하는 과정에서 문제가 생겼습니다 (buffer)")

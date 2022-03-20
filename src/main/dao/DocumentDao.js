@@ -24,13 +24,13 @@ module.exports = {
         return rows
     },
 
-    updateDocument: async (connection, title, imgUrl, category, content, searchWord, documentId) => {
+    updateDocument: async (connection, title, imgUrl, content, searchWord, documentId) => {
         const sql = `
         UPDATE document
-           SET title = ?, img_link = ?, category = ?, content = ?, search_word = ?
+           SET title = ?, img_link = ?, content = ?, search_word = ?
          WHERE id = ?;`
 
-        const [rows] = await connection.execute(sql, [title, imgUrl, category, content, searchWord, documentId])
+        const [rows] = await connection.execute(sql, [title, imgUrl, content, searchWord, documentId])
 
         return rows
     },
