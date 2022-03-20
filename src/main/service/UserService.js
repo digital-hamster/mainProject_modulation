@@ -46,9 +46,8 @@ module.exports = {
 
     //정식회원 변경
     changeAuthConnection: async (connection, request) => {
-        const { authcode } = request
-        const isAuthCode = await UserDao.selectAuthCode(connection, authcode)
-        if (isAuthCode === undefined) {
+        const authCode = await UserDao.selectAuthCode(connection, request.authcode)
+        if (authCode === undefined) {
             throw Error("존재하지 않는 인증코드입니다")
         }
         const userEmail = await UserDao.selectEmailByAuthCode(connection, authcode)
@@ -113,7 +112,7 @@ module.exports = {
             throw Error("현재 비밀번호가 일치하지 않습니다")
         }
 
-        const result = await UserDao.changePasswordByRequest(connection, changePw, userId)
+        const result = await UserDao.changePassword(connection, changePw, userId)
         if (!result || result.length < 1) {
             throw Error("비밀번호 변경에 실패했습니다")
         }

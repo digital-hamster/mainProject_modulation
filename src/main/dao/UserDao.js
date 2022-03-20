@@ -102,7 +102,7 @@ module.exports = {
 
         return rows[0]
     },
-    changePasswordByRequest: async (connection, changePw, userId) => {
+    changePassword: async (connection, changePw, userId) => {
         const sql = `
          UPDATE user
             SET password = ?
