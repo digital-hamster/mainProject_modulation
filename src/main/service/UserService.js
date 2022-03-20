@@ -47,10 +47,10 @@ module.exports = {
     //정식회원 변경
     changeAuthConnection: async (connection, request) => {
         const authCode = await UserDao.selectAuthCode(connection, request.authcode)
-        if (authCode === undefined) {
+        if (authCode.auth_code === undefined) {
             throw Error("존재하지 않는 인증코드입니다")
         }
-        const userEmail = await UserDao.selectEmailByAuthCode(connection, authcode)
+        const userEmail = await UserDao.selectEmailByAuthCode(connection, authCode.auth_code)
         if (userEmail.changedRows == 0) {
             throw Error("존재하지 않는 사용자입니다")
         }
