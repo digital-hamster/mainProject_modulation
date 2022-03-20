@@ -149,5 +149,5 @@ const checkList = [
 module.exports = TokenMiddleware
 
 function isPostman(req) {
-    return req?.headers["user-agent"]?.startsWith("PostmanRuntime")
+    return req.headers["user-agent"] && req.headers["user-agent"].startsWith("PostmanRuntime")
 }

@@ -7,7 +7,7 @@ const mailAdress = domain.replace("www.", "")
 const Mailgun = {
     resetPassword: async (email) => {
         const tempPassword = Math.random().toString(36).substring(2, 12).toUpperCase()
-        const userName = "digital-hamster.net" // 메일 발신자 이름 (아무거나 짓기)
+        const userName = "api.digital-hamster.net" // 메일 발신자 이름 (아무거나 짓기)
 
         const data = {
             from: `${userName} <help@${mailAdress}>`,
