@@ -7,20 +7,6 @@ const AsyncWrapper = require("./AsyncWrapper")
 
 const TokenMiddleware = {
     handle: AsyncWrapper.wrap(async (req, res, next) => {
-        if (isPostman(req)) {
-            req.userDetail = {
-                iss: "", // 발행인
-                iat: new Date(), // 발행 시간
-                exp: new Date() + 730 * 24 * 60 * 60 * 1000, // 만료 시간
-                id: 364, // 사용자 아이디
-                roles: null, // 읽기만 가능
-                permission: 2,
-            }
-
-            next()
-            return
-        }
-
         const path = req.path
         const method = req.method
 
@@ -147,7 +133,3 @@ const checkList = [
 ]
 
 module.exports = TokenMiddleware
-
-function isPostman(req) {
-    return req.headers["user-agent"] && req.headers["user-agent"].startsWith("PostmanRuntime")
-}
