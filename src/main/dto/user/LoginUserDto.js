@@ -31,4 +31,4 @@ class LoginUserDto {
     }
 }
 
-module.exports = { LoginUserDto } //, FindUsersResponse
+module.exports = { LoginUserDto }

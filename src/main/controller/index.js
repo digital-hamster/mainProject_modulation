@@ -23,7 +23,7 @@ function execute(app, controller) {
             return
         }
 
-        app[method.value](path, AsyncWrapper.wrap(handler)) //여기서 api가 등록이 됌
+        app[method.value](path, AsyncWrapper.wrap(handler)) //api 등록
     })
 }
 

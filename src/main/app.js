@@ -5,7 +5,6 @@ const ErrorHandler = require("./config/ErrorHandler")
 const TokenMiddleware = require("./config/TokenMiddleware")
 
 const { registerAll } = require("./controller")
-// const AsyncWrapper = require("./config/AsyncWrapper")
 const app = express()
 const port = process.env.NODE_ENV === "test" ? 18080 : 8080
 

@@ -1,7 +1,8 @@
 const md5 = require("md5")
-const UserDao = require("../dao/UserDao") //db쿼리를 실행해야하니까
+const UserDao = require("../dao/UserDao")
 const DocumentDao = require("../dao/DocumentDao")
 const CryptoUtil = require("../config/CryptoUtil")
+const Mailgun = require("../config/Mailgun")
 
 module.exports = {
     selectUserExample: async (connection) => {
@@ -43,14 +44,18 @@ module.exports = {
         return authCode
     },
 
-    //changeAuthcode
+    //정식회원 변경
     changeAuthConnection: async (connection, request) => {
         const { authcode } = request
+        const isAuthCode = await UserDao.selectAuthCode(connection, authcode)
+        if (isAuthCode === undefined) {
+            throw Error("존재하지 않는 인증코드입니다")
+        }
         const userEmail = await UserDao.selectEmailByAuthCode(connection, authcode)
         if (userEmail.changedRows == 0) {
             throw Error("존재하지 않는 사용자입니다")
         }
-        const checkPermission = await UserDao.selectPermissionByEmail(connection, userEmail) //check permission > 변경하려는 사용자가 정식회원인지
+        const checkPermission = await UserDao.selectPermissionByEmail(connection, userEmail)
 
         if (checkPermission[0].permission === 1) {
             throw Error("이미 정식회원인 사용자입니다")
@@ -64,9 +69,8 @@ module.exports = {
         return result
     },
 
-    // loginUser
+    //로그인
     loginUserConnection: async (connection, request) => {
-        //authCode발급
         const { email, password } = request
 
         const userResult = await UserDao.findUserByEmail(connection, email, password)
@@ -80,7 +84,11 @@ module.exports = {
     },
 
     //비밀번호 초기화
-    resetUserPassword: async (connection, email, changedPassword) => {
+    resetUserPassword: async (connection, request) => {
+        const { email } = request
+
+        const changedPassword = await Mailgun.resetPassword(email)
+
         const userInform = await UserDao.findUserIdByEmail(connection, email)
         if (userInform.length == 0) {
             throw Error("존재하지 않는 사용자입니다.")
@@ -89,11 +97,13 @@ module.exports = {
         if (userResult.changedRows == 0) {
             throw Error("변경 실패했습니다")
         }
-        //K1ZB0IHKHM
+
         return { result: true }
     },
     //비밀번호 변경
-    changeUserPasswordConnection: async (connection, password, changePw, userId) => {
+    changeUserPassword: async (connection, request) => {
+        const { password, changePw, userId } = request
+
         const userInform = await UserDao.findPasswordById(connection, userId)
 
         if (!userInform || userInform.length === 0) {
@@ -111,9 +121,9 @@ module.exports = {
         return { result: true }
     },
     //회원탈퇴
-    deleteUserConnection: async (connection, request) => {
+    deleteUser: async (connection, request) => {
         const { userId } = request
-        //db에서 찾아온 이메일 있어야 함
+
         const userEmail = await UserDao.selectEmailByUserId(connection, userId)
         if (!userEmail | (userEmail.length == 0)) {
             throw Error("존재하지 않는 사용자 입니다")
@@ -121,7 +131,7 @@ module.exports = {
         await UserDao.deleteAuthCodeByEmail(connection, userEmail)
         await DocumentDao.deleteDocumentByUserId(connection, userId)
         const userResult = await UserDao.deleteUserByid(connection, userId)
-        if (!userResult || userResult.length < 1) {
+        if (userResult.affectedRows === 0) {
             throw Error("사용자 탈퇴를 실패했습니다")
         }
 

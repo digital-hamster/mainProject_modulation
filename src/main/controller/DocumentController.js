@@ -11,27 +11,16 @@ const AnythingUtil = require("../util/AnythingUtil")
 
 module.exports = {
     //카테고리조회
-    //피드백 (실패) 할많하않
     selectCategories: {
         method: HttpMethod.GET,
         path: "/categories",
         handler: async (req, res, next) => {
-            // function checkArray(CategoryType) {
-            //     //이거 다른 곳으로 모듈화로 빼고, 그 전에 형검사가 되는지부터
-            //     if (!CategoryType.description) {
-            //     }
-
-            //     return CategoryType.map((el) => CategoryType[el])
-            // }
-
             res.output = { result: AnythingUtil.enumToArray(CategoryType) }
-            //res.output = { result: Object.keys(CategoryType).map((el) => CategoryType[el]) }
-            //res.output = { result: Object.keys(CategoryType).map((el) => Array.isArray(CategoryType[el])) }
             next()
         },
     },
+
     //게시글 업로드
-    //피드백 (성공)
     createDocument: {
         method: HttpMethod.POST,
         path: "/documents",
@@ -46,6 +35,7 @@ module.exports = {
             next()
         },
     },
+
     //전체 게시글 조회
     selectDocument: {
         method: HttpMethod.GET,
@@ -54,12 +44,13 @@ module.exports = {
             const request = new SelectDocumentDto(req)
 
             const connection = await Database.getConnection(res)
-            const documentResult = await DocumentService.selectDocument(connection, request)
+            const documentResult = await DocumentService.selectDocuments(connection, request)
 
             res.output = documentResult
             next()
         },
     },
+
     //게시글수정
     updateDocument: {
         method: HttpMethod.PUT,
@@ -75,6 +66,7 @@ module.exports = {
             next()
         },
     },
+
     //게시글삭제
     deleteDocument: {
         method: HttpMethod.DELETE,

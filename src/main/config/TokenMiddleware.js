@@ -12,7 +12,7 @@ const TokenMiddleware = {
                 iss: "", // 발행인
                 iat: new Date(), // 발행 시간
                 exp: new Date() + 730 * 24 * 60 * 60 * 1000, // 만료 시간
-                id: 10022, // 사용자 아이디
+                id: 364, // 사용자 아이디
                 roles: null, // 읽기만 가능
                 permission: 2,
             }
@@ -21,15 +21,10 @@ const TokenMiddleware = {
             return
         }
 
-        // req.magic = "마술쇼"
-        //토큰검사 안하는 경로는 패스
-        const path = req.path //path만 받아오기
-        const method = req.method //and문 사용해서 조건 추가해주기 >> method만 안 겹치는 경우는 !
+        const path = req.path
+        const method = req.method
 
         const isPass = passList.some((el) => new RegExp(el.path).test(path) && el.method.name === method)
-        //find 조건에 일치하는 배열에 원소를 찾아서 리턴
-        //some 조건에 일치하는게 있으면 true 없으면 false
-        //every 조건에 모두 일치하면 true 아니면 false
 
         if (isPass) {
             next()
@@ -38,35 +33,24 @@ const TokenMiddleware = {
 
         //토큰검사
         const { authorization } = req.headers
-
         if (!authorization) {
             throw Error("인증 토큰이 없습니다.")
         }
 
-        //const {jwtPayload} =Auth
-
         const token = authorization.replace(/Bearer[+\s]/g, "")
         const jwtPayload = Auth.verifyToken(token)
 
-        req.userDetail = jwtPayload //미들웨어 밖으로 값을 넘겨주고 계속 쓸 거임
+        req.userDetail = jwtPayload
 
-        // 권한 검사 >> 토큰을 사용하지 않는  api를 제외하고 모든 checkList에 있어야 함
         const apiInfo = checkList.find((el) => new RegExp(el.path).test(path) && el.method.name === method)
-
         if (!apiInfo) {
-            throw Error("토큰을 사용하는 api를 제대로 검사하지 못했습니다 (apiInfo)") //"존재하지 않는 apiInfo입니다."
+            throw Error("토큰을 사용하는 api를 제대로 검사하지 못했습니다 (apiInfo)")
         }
-        //apiInfo 패턴 조건에 맞는 path가 아니면 apiInfo가 들어오지 않음
-        //!!!>> 데이터형을 해당 api에서 걸러내는 게 아니라,
-        //미들웨어에서 걸러내는 작업이 필요할 듯함 >> 어디서 에러를 내야하니
-        //api 내에서 형검사 하는게 의미가 없어진다 ... ㄹㅇ 미들웨어에서 막혓어 ..
-
         if (apiInfo.permission > jwtPayload.permission) {
             throw Error("권한이 부족합니다.")
         }
-        // 권한 검사 끝
 
-        // 실제 존재하는 유저인지 검증
+        //실존 유저인지
         const connection = await Database.getConnection(res)
         await AuthService.checkUser(jwtPayload, connection)
 
@@ -80,7 +64,6 @@ const numberPattern = "/\\d+"
 const allPattern = "/\\w+"
 
 const passList = [
-    //pass, check 정적임, 설정값을 모듈로 분리해서, 보기좋은 형태로 모듈화, 파일에 따로 두기 >> 모듈로 분리해서 불러오기!
     {
         path: "/example",
         method: HttpMethod.GET,
@@ -131,12 +114,9 @@ const passList = [
 ]
 
 const checkList = [
-    //api만들 때마다 여기서 추가해줘야함 >> 최소 권한 검사 + 어쩌꾸.
-    //회원가입중에 임시회원도 토큰은 있기 때문에, 0부터 가능하다고 해서 무시하면 X
     {
         //비밀번호 변경
         path: "/users" + numberPattern,
-        // /users/[0-9]+
         method: HttpMethod.PUT,
         permission: 0,
     },
@@ -166,23 +146,8 @@ const checkList = [
     },
 ]
 
-//미들웨어는 중간 장치라서 next만 하면 됌
-//토큰 api를 호출해서 저기서 사용해야함
-
-//어떤 api를 호출하든, 미들웨어는 항상 넘겨진다 !!
-
-//미들웨어를 실행할 시에, 내가 요청한 api의 정보를 미들웨어에서 미리 볼 수 있고,
-//이를 통해서 토큰검사를 안 하고 싶은것들을 예외처리 할 수 있음
 module.exports = TokenMiddleware
 
 function isPostman(req) {
     return req?.headers["user-agent"]?.startsWith("PostmanRuntime")
 }
-//req.headers["user-agent"] &&  req.headers["user-agent"].startsWith("PostMan~~~
-//잘 돌아가네용 ㅠㅠ 저 이거 게시글 테스트 고치면 그때 고민할거임요 뉑 수고하셔요
-//와 이제 끝에 r 붙이셨네요 기뻐요
-//ㅋㅋ
-// npm test plz
-// okay 고민해보세요 전 이만
-
-// ㅇㅋ

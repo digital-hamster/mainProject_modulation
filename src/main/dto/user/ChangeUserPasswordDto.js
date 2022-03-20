@@ -1,12 +1,12 @@
 class ChangeUserPasswordDto {
-    password = "" 
+    password = ""
     changePw = ""
     userId = 0
-    
+
     constructor(req) {
         const { password, changePw } = req.body
-        const userId  = req.userDetail.id
-        
+        const userId = req.userDetail.id
+
         this.password = password
         this.changePw = changePw
         this.userId = userId
@@ -14,7 +14,7 @@ class ChangeUserPasswordDto {
     }
 
     validate() {
-        if (isNaN(this.userId)){
+        if (isNaN(this.userId)) {
             throw Error("아이디 형식이 올바르지 않습니다")
         }
         if (!this.userId) {

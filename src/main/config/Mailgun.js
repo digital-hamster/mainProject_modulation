@@ -45,5 +45,4 @@ const Mailgun = {
         return result
     },
 }
-// from: `${userName} <help@${domain.replace("www.", "")}>`,
 module.exports = Mailgun

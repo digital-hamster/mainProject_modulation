@@ -2,9 +2,7 @@ const Database = require("../config/Database")
 const Mailgun = require("../config/Mailgun")
 
 module.exports = {
-    resetPassword: async () => {
-        /* TO-DO */
-    },
+    resetPassword: async () => {},
     sendCertificationCode: async (email) => {
         const result = await Mailgun.sendMail(email)
         const code = result.certificationCode
@@ -22,5 +20,3 @@ const insertQuery = `
     INSERT INTO authorization_code (code, email) VALUES (? ,?)
     ON DUPLICATE KEY UPDATE code = ?, email = ?;
 `
-//TEST 해보기
-//MailService.sendCertificationCode("roby8502@naver.com")

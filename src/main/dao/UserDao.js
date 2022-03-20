@@ -1,39 +1,7 @@
 const CryptoUtil = require("../config/CryptoUtil")
 
 module.exports = {
-    // findUserById: async (id, connection) => {
-    //     const sql = `
-    //         SELECT id
-    //         FROM user
-    //         WHERE id = ?;
-    //     `
-
-    //     const [rows] = await connection.execute(sql, [id])
-
-    //     if (rows.length === 0 || rows === undefined) {
-    //         throw Error("토큰의 정보가 온전하지 못해 정보를 불러올 수 없습니다") //id 有, 토큰 정보가 잘못되어 db에서 id를 읽지 못함 >> postman:249 / token:248 이런경우임 토큰의 정보가 다름
-    //     }
-
-    //     return rows[0]
-    // },
-    // findPermissionbyUser: async (id, connection) => {
-    //     const sql = `
-    //         SELECT permission
-    //         FROM user
-    //         WHERE id = ?;
-    //     `
-
-    //     const [rows] = await connection.execute(sql, [id])
-
-    //     if (rows === undefined) {
-    //         throw Error("존재하지 않는 사용자입니다.")
-    //     }
-
-    //     return rows[0].permission
-    // },
-
-    //회원가입 - authcode 삽입 //아니 이거 발급은 어디서 해주는거야 ??? ㅇ너ㅡ워ㅏㅂㅁ누어ㅏㅁ누ㅏ어ㅜㄴ머ㅏ류ㅜㅁ나ㅓ류 ㅂ다ㅓ륩댜ㅏㅓ류ㅓㅏㄷㅂ쥬ㅜㅅ하
-    //서비스에서 발급해주고 그걸 db로 넘겨야하니까 이게 ㅣ맞는거 아녀 />??
+    //회원가입
     createUser: async (connection, email, nickname, password) => {
         const sql = `
         INSERT INTO
@@ -44,7 +12,6 @@ module.exports = {
             nickname,
             CryptoUtil.encryptByBcrypt(password),
         ])
-        //[CryptoUtil.encrypt(email), CryptoUtil.encryptByBcrypt(password), nickname]
 
         return rows
     },
@@ -61,8 +28,16 @@ module.exports = {
     },
 
     //정식회원 변경
-    //정식회원 변경 - select email
-    //change authcode
+    selectAuthCode: async (connection, authcode) => {
+        const sql = `
+       SELECT auth_code
+         FROM user_auth
+        WHERE auth_code = ?;`
+        const [rows] = await connection.execute(sql, [authcode])
+
+        return rows[0]
+    },
+
     selectEmailByAuthCode: async (connection, authcode) => {
         const sql = `
          SELECT user_email
@@ -72,8 +47,6 @@ module.exports = {
 
         return rows[0].user_email
     },
-
-    //정식회원 변경 - check permission
     selectPermissionByEmail: async (connection, userEmail) => {
         const sql = `
          SELECT permission
@@ -83,8 +56,6 @@ module.exports = {
 
         return rows
     },
-
-    //정식회원 변경 - update authcode
     updateAuthcodeByEmail: async (connection, userEmail) => {
         const sql = `
          UPDATE user
@@ -95,8 +66,8 @@ module.exports = {
         return rows
     },
 
-    //login
-    findUserByEmail: async (connection, email, password) => {
+    //로그인
+    findUserByEmail: async (connection, email) => {
         const sql = `
          SELECT id,
                 permission,
@@ -104,15 +75,11 @@ module.exports = {
            FROM user
           WHERE email = ?;`
         const [rows] = await connection.execute(sql, [CryptoUtil.encrypt(email)])
-
         const userInform = rows[0]
-
-        // if (!userInform || rows.length === 0) {
-        //     throw Error("존재하지 않는 사용자입니다.")
-        // }
 
         return userInform
     },
+
     //비밀번호 초기화
     resetPasswordByEmail: async (connection, email, changedPassword) => {
         const sql = `
@@ -144,8 +111,8 @@ module.exports = {
 
         return rows
     },
+
     //회원탈퇴
-    //선행으로 아이디로 검색하기전에 이메일 줘야함
     selectEmailByUserId: async (connection, userId) => {
         const sql = `
          SELECT email
@@ -165,7 +132,6 @@ module.exports = {
 
         return rows
     },
-    //유저 삭제 전에, authCode 삭제, document삭제, 유저 id삭제
     deleteUserByid: async (connection, userId) => {
         const sql = `
       DELETE
