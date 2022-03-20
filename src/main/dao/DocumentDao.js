@@ -21,7 +21,7 @@ module.exports = {
 
         const [rows] = await connection.execute(sql, [category, limit, offset])
 
-        return rows[0]
+        return rows
     },
 
     updateDocument: async (connection, title, imgUrl, category, content, searchWord, documentId) => {
